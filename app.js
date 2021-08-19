@@ -4,8 +4,7 @@
 const express = require('express');
 const morgan = require('morgan');
 
-const sequelize = require('./models').sequelize;
-const DB = require('./models/index');
+const {models, sequelize} = require('./models')
 
 // ----------middleware----------
 // test connection to database

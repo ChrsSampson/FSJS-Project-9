@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const catchAsync = require('../middleware/catchAsync');
 
-const Course = require('../models').course
+const Course = require('../models').Course
 
 // Show all courses
 router.get('/', catchAsync(async (req, res) => {
@@ -29,10 +29,11 @@ router.get('/:id', catchAsync(async (req, res) => {
 // create a course
 router.post('/', catchAsync(async (req, res) => {
     try{
-        const course = await Course.create(req.body)
+        await Course.create(req.body)
         res.status(201).location('/') 
     }
     catch(e){
+        console.log(e)
         res.status(400).json({Error: e.message})
     }
 }));

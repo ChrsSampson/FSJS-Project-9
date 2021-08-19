@@ -3,7 +3,7 @@ const router = express.Router();
 const catchAsync = require('../middleware/catchAsync');
 const bcrypt = require('bcryptjs');
 
-const User = require('../models').users
+const User = require('../models').User
 
 // Show all users
 router.get('/', catchAsync(async (req, res) => {

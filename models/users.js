@@ -1,67 +1,63 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class users extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      users.hasMany(models.course, {foreignKey: 'userId'});
-    }
-  };
-  users.init({
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'User first name cannot be empty'
-        }
-      }
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'User last name cannot be empty'
-        }
-      }
-    },
-    emailAddress: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isEmail: {
-          args: false,
-          msg: 'User email address is not valid'
+const Sequelize = require('sequelize');
+
+module.exports = (sequelize) => {
+    class User extends Sequelize.Model {}
+    User.init({
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
         },
-        notEmpty: {
-          args: true,
-          msg: 'User email address cannot be empty'
+        firstName: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {
+              notNull:{
+                args:true,
+                msg: "First Name is Required"
+              }
+            }
+        },
+        lastName: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {
+              notNull:{
+                args:true,
+                msg: "Last Name is Required"
+              }
+            }
+        },
+        emailAddress: {
+            type: Sequelize.STRING,
+            validate: {
+                isEmail: {
+                    args: true,
+                    msg: "Provide a properly formatted email address"
+                }
+            }
+        },
+        password: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {
+              notNull:{
+                args:true,
+                msg: "A valid password is required"
+              }
+            }
         }
-      }
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'User password cannot be empty'
-        }
-      }
-    },
-  }, {
-    sequelize,
-    modelName: 'users',
-  });
-  return users;
+    }, { sequelize });
+    
+    //data association 
+    User.associate = (models) => {
+        User.hasMany(models.Course, {
+            foreignKey: {
+                fieldName: "userId"
+            }
+        })
+    };
+
+    return User;
 };

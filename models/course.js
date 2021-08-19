@@ -1,45 +1,38 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class course extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      course.belongsTo(models.users);
-    }
-  };
-  course.init({
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Title cannot be null'
-        }
-      }
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Description cannot be null'
-        }
-      }
-    },
-    estimatedTime: DataTypes.STRING,
-    materialsNeeded: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'course',
-  });
-  return course;
+const Sequelize = require('sequelize');
+
+module.exports = (sequelize) => {
+    class Course extends Sequelize.Model {}
+    Course.init({
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        title: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        description: {
+            type: Sequelize.TEXT,
+            allowNull: false
+        },
+        estimatedTime: {
+            type: Sequelize.STRING,
+        },
+        materialsNeeded: {
+            type: Sequelize.STRING,
+        },
+    }, { sequelize });
+
+    // Data Association
+    Course.associate = (models) => {
+        Course.belongsTo(models.User, {
+            foreignKey: {
+                fieldName: "userId"
+            }
+        })
+    };
+
+    return Course;
 };
