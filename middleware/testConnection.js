@@ -1,14 +1,12 @@
 const sequelize = require('../models').sequelize;
 
-testConnection = (req, res, next) => {
+testConnection = async () => {
   try{
-    sequelize.authenticate()
+    await sequelize.authenticate()
     console.log('Connection test successful');
-    next();
   }
   catch(err){
       console.log('Connection Failed:', err)
-      next(err);
   }
 }
 

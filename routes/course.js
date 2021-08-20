@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../middleware/catchAsync');
+const isAuth = require('../middleware/isAuthenticated')
 
 const Course = require('../models').Course
 
@@ -27,22 +28,21 @@ router.get('/:id', catchAsync(async (req, res) => {
 }));
 
 // create a course
-router.post('/', catchAsync(async (req, res) => {
+router.post('/', isAuth ,catchAsync(async (req, res) => {
     try{
         await Course.create(req.body)
-        res.status(201).location('/') 
+        res.status(201).location('/').end() 
     }
     catch(e){
-        console.log(e)
         res.status(400).json({Error: e.message})
     }
 }));
 
 // update a course
-router.put('/:id', catchAsync(async (req, res) => {
+router.put('/:id', isAuth, catchAsync(async (req, res) => {
     try{
-        const course = await Course.update(req.body, req.params.id)
-        res.status(204).location('/')
+        const course = await Course.update(req.body, { where: {id: req.params.id} })
+        res.status(204).location('/').end()
     }
     catch(e){
         res.status(400).json({Error: e.message})
@@ -50,10 +50,10 @@ router.put('/:id', catchAsync(async (req, res) => {
 }));
 
 // delete a course
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id', isAuth, catchAsync(async (req, res) => {
     try{
         await Course.destroy({where: {id:req.params.id} })
-        res.status(204).location('/')
+        res.status(204).location('/').end()
     }
     catch(e){
         res.status(400).json({Error: e.message})
